@@ -1,6 +1,6 @@
-# ✈️ Aero-Canvas AI
+# ✈️ AeroCanvas AI
 
-> An AI-powered writing assistant that helps you generate high-quality content in seconds.
+> Draw in the air using your finger and camera with real-time hand tracking.
 
 🌐 **Live Demo:** https://aerowritingai.netlify.app/
 
@@ -8,21 +8,23 @@
 
 ## 📖 Overview
 
-Aero-Canvas AI is a lightweight AI writing web application designed to help users quickly generate content for blogs, articles, emails, social media posts, and more. It provides a clean, responsive interface where users can enter prompts and receive AI-generated text instantly.
+AeroCanvas AI is a real-time air drawing application that allows users to draw on a virtual canvas using hand gestures captured through their webcam. Using computer vision and hand tracking, the application detects your index finger and converts its movement into digital strokes, creating a touchless drawing experience.
 
-This project was built to demonstrate how modern AI can simplify the writing process while maintaining a fast and intuitive user experience.
+The project demonstrates how AI-powered hand tracking can be used to build interactive, gesture-based applications without requiring any physical stylus or touchscreen.
 
 ---
 
 ## ✨ Features
 
-- 🤖 AI-powered text generation
-- ✍️ Generate blogs, articles, and creative content
-- ⚡ Fast and responsive interface
-- 📱 Mobile-friendly design
-- 🎨 Clean and modern UI
-- 🌐 Works directly in the browser
-- 💻 Simple and lightweight codebase
+- 🖐️ Real-time hand tracking
+- ✍️ Draw using your index finger in the air
+- 🎨 Multiple brush colors
+- 📏 Adjustable brush size
+- ↩️ Undo functionality
+- ↪️ Redo functionality
+- 💻 Responsive and modern UI
+- 📷 Webcam-based interaction
+- ⚡ Smooth real-time drawing
 
 ---
 
@@ -30,21 +32,22 @@ This project was built to demonstrate how modern AI can simplify the writing pro
 
 - HTML5
 - CSS3
-- JavaScript (Vanilla JS)
-- Python (Backend/API integration)
-- AI Language Model API
+- JavaScript
+- Python
+- OpenCV
+- MediaPipe Hands
 
 ---
 
 ## 📂 Project Structure
 
-```
+```text
 Aero-Canvas-AI/
 │
-├── index.html      # Main webpage
+├── index.html      # Main UI
 ├── style.css       # Styling
-├── app.js          # Frontend logic
-├── run.py          # Python backend
+├── app.js          # Frontend functionality
+├── run.py          # Hand tracking & drawing logic
 └── README.md
 ```
 
@@ -52,61 +55,73 @@ Aero-Canvas-AI/
 
 ## 🚀 Getting Started
 
-### 1. Clone the repository
+### Clone the Repository
 
 ```bash
 git clone https://github.com/AsharNaeem2006/Aero-Canvas-AI.git
 ```
 
-### 2. Navigate to the project
+### Navigate to the Project
 
 ```bash
 cd Aero-Canvas-AI
 ```
 
-### 3. Run the application
+### Install Dependencies
 
-If you're using the Python backend:
+```bash
+pip install opencv-python mediapipe flask
+```
+
+*(Install any additional packages used in `run.py` if required.)*
+
+### Run the Application
 
 ```bash
 python run.py
 ```
 
-Or simply open `index.html` in your browser if running the frontend only.
+Open your browser and access the local server if applicable.
 
 ---
 
-## 🌍 Live Website
+## 🎮 How to Use
 
-Visit the deployed application here:
-
-**https://aerowritingai.netlify.app/**
-
----
-
-## 📸 Preview
-
-> Add screenshots of your application here.
-
-Example:
-
-```
-/screenshots/home.png
-/screenshots/result.png
-```
+1. Launch the application.
+2. Allow camera access.
+3. Raise your hand in front of the webcam.
+4. Use your **index finger** to draw in the air.
+5. Choose different brush colors.
+6. Adjust brush size using the slider.
+7. Use **Undo** and **Redo** to edit your drawing.
 
 ---
 
-## 🎯 Future Improvements
+## 🌍 Live Demo
 
-- User authentication
-- Save writing history
-- Multiple AI writing templates
-- Dark mode
-- Export generated content
-- Copy to clipboard
-- Multi-language support
-- AI chat assistant
+https://aerowritingai.netlify.app/
+
+---
+
+## 📸 Screenshots
+
+### Main Interface
+
+<img src="https://raw.githubusercontent.com/AsharNaeem2006/Aero-Canvas-AI/main/assets/demo.png" width="900"/>
+
+> *(Replace this image with an actual screenshot from your project after uploading it to the repository.)*
+
+---
+
+## 🔮 Future Improvements
+
+- 🖼️ Save drawings as images
+- 🧹 Clear canvas button
+- 🌙 Dark/Light theme
+- ✋ Multi-hand support
+- ✨ Gesture shortcuts
+- 🎥 Screen recording
+- ☁️ Cloud save functionality
 
 ---
 
@@ -114,26 +129,26 @@ Example:
 
 Contributions are welcome!
 
-1. Fork the repository
-2. Create a new branch
+1. Fork this repository.
+2. Create your feature branch.
 
 ```bash
 git checkout -b feature-name
 ```
 
-3. Commit your changes
+3. Commit your changes.
 
 ```bash
-git commit -m "Add new feature"
+git commit -m "Added new feature"
 ```
 
-4. Push to GitHub
+4. Push your branch.
 
 ```bash
 git push origin feature-name
 ```
 
-5. Open a Pull Request
+5. Open a Pull Request.
 
 ---
 
@@ -145,9 +160,9 @@ git push origin feature-name
 
 ---
 
-## ⭐ Support
+## ⭐ Show Your Support
 
-If you found this project useful, please consider giving it a ⭐ on GitHub. It helps support the project and motivates future development.
+If you like this project, consider giving it a **⭐ Star** on GitHub.
 
 ---
 
@@ -157,4 +172,8 @@ This project is licensed under the MIT License.
 
 ---
 
-**Made with ❤️ by Ashar Naeem**
+<div align="center">
+
+### Made with ❤️ by Ashar Naeem
+
+</div>
