@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AeroCanvas AI - Air Writing App</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- MediaPipe Hands & Camera Utils -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="app-container">
+    <div class="made-by-banner">Made by (Ashar Naeem)</div>
+    <!-- Background grid decoration -->
+    <div class="bg-grid"></div>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+
+    <!-- Main Workspace -->
+    <main class="workspace">
+      <!-- Camera and Canvas overlay container -->
+      <div class="canvas-container" id="canvasContainer">
+        <video id="webcam" autoplay playsinline muted></video>
+        <!-- Canvas for drawing -->
+        <canvas id="paintCanvas"></canvas>
+        <!-- Canvas for skeleton/cursor tracking (overlay) -->
+        <canvas id="trackingCanvas"></canvas>
+        
+        <!-- Loading overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+          <!-- Default loading state -->
+          <div id="loadingState">
+            <div class="spinner"></div>
+            <h2>Initializing AI Model...</h2>
+            <p>Please allow camera access and wait a moment.</p>
+          </div>
+          <!-- Camera error state (hidden by default) -->
+          <div id="cameraErrorState" style="display:none; text-align:center;">
+            <div class="error-icon">&#128247;</div>
+            <h2 style="color:#ff4d7a;">Camera Access Failed</h2>
+            <p id="cameraErrorMsg">Could not access your camera.</p>
+            <div class="error-tips">
+              <p><strong>Common fixes:</strong></p>
+              <ul>
+                <li>Close other apps using the camera (Teams, Skype, Zoom, etc.)</li>
+                <li>Close other browser tabs that may be using the camera</li>
+                <li>Check that camera permissions are allowed in your browser</li>
+                <li>Make sure your camera is physically connected</li>
+              </ul>
+            </div>
+            <button id="btnRetryCamera" class="retry-btn">Try Again</button>
+          </div>
+        </div>
+
+        <!-- Custom Air Cursor -->
+        <div class="air-cursor" id="airCursor"></div>
+      </div>
+    </main>
+
+    <!-- Sidebar Glassmorphic Controls Panel -->
+    <aside class="control-panel">
+      <div class="panel-header">
+        <div class="logo">
+          <span class="icon">✨</span>
+          <h1>AeroCanvas <span>AI</span></h1>
+        </div>
+        <p class="subtitle">Write in the air using your camera</p>
+      </div>
+
+      <!-- Mode Display -->
+      <div class="control-group mode-display">
+        <h3>Active Mode</h3>
+        <div class="mode-badge" id="currentMode">
+          <span class="mode-dot"></span>
+          <span class="mode-text">Detecting Hand...</span>
+        </div>
+      </div>
+
+      <!-- Colors -->
+      <div class="control-group">
+        <h3>Brush Color</h3>
+        <div class="color-palette">
+          <button class="color-btn active" data-color="#00f0ff" style="--btn-color: #00f0ff;"></button>
+          <button class="color-btn" data-color="#ff007f" style="--btn-color: #ff007f;"></button>
+          <button class="color-btn" data-color="#ffe600" style="--btn-color: #ffe600;"></button>
+          <button class="color-btn" data-color="#39ff14" style="--btn-color: #39ff14;"></button>
+          <button class="color-btn" data-color="#b026ff" style="--btn-color: #b026ff;"></button>
+          <button class="color-btn" data-color="#ffffff" style="--btn-color: #ffffff;"></button>
+          
+          <!-- Custom Color Picker container -->
+          <div class="custom-color-picker">
+            <input type="color" id="colorPicker" value="#00f0ff">
+            <span class="picker-label">🎨</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Brush Size -->
+      <div class="control-group">
+        <div class="slider-header">
+          <h3>Brush Size</h3>
+          <span id="brushSizeVal">15px</span>
+        </div>
+        <div class="slider-container">
+          <input type="range" id="brushSize" min="3" max="60" value="15">
+        </div>
+      </div>
+
+      <!-- Actions (Undo, Redo, Clear, Save) -->
+      <div class="control-group actions-grid">
+        <button id="btnUndo" class="action-btn" title="Undo Last Stroke">
+          <span class="btn-icon">↩️</span> Undo
+        </button>
+        <button id="btnRedo" class="action-btn" title="Redo Last Stroke">
+          <span class="btn-icon">↪️</span> Redo
+        </button>
+        <button id="btnClear" class="action-btn btn-danger" title="Clear Canvas">
+          <span class="btn-icon">🗑️</span> Clear
+        </button>
+        <button id="btnSave" class="action-btn btn-success" title="Save Image">
+          <span class="btn-icon">💾</span> Save Drawing
+        </button>
+      </div>
+
+      <!-- Settings / Display Toggles -->
+      <div class="control-group toggles-group">
+        <h3>Display Settings</h3>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggleWebcam" checked>
+          <span class="slider"></span>
+          <span class="toggle-label">Show Camera Feed</span>
+        </label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggleSkeleton" checked>
+          <span class="slider"></span>
+          <span class="toggle-label">Show Hand Skeleton</span>
+        </label>
+      </div>
+
+      <!-- Gesture Guide -->
+      <div class="control-group gesture-guide">
+        <h3>Gesture Quick Guide</h3>
+        <div class="gesture-item">
+          <span class="gesture-icon">☝️</span>
+          <div class="gesture-desc">
+            <strong>Draw Mode</strong>
+            <span>Raise Index finger only. Draw lines in the air.</span>
+          </div>
+        </div>
+        <div class="gesture-item">
+          <span class="gesture-icon">✌️</span>
+          <div class="gesture-desc">
+            <strong>Hover / Navigation Mode</strong>
+            <span>Raise Index & Middle fingers. Move cursor without drawing. Hover over buttons for 1.5s to auto-click!</span>
+          </div>
+        </div>
+        <div class="gesture-item">
+          <span class="gesture-icon">🖐️</span>
+          <div class="gesture-desc">
+            <strong>Eraser Mode</strong>
+            <span>Open your hand fully (palm facing camera) to use as eraser brush.</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Application script -->
+  <script src="app.js"></script>
+</body>
+</html>
